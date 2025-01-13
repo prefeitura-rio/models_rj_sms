@@ -1,1 +1,3 @@
-# pipelines_rj_sms_models
+# models_rj_sms
+
+A short description of the project
