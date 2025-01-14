@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/allergy/standardize", tags=["standardizer"])
 async def allergy_standardize(
     allergies_list: AllergyStandardizeInput,
-):
+) -> AllergyStandardizeOutput:
     gemini_result = standardize_allergies_using_gemini(
         allergies_list=allergies_list
     )
