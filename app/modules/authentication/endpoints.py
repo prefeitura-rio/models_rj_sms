@@ -2,8 +2,10 @@ import json
 import requests
 
 from fastapi import APIRouter, HTTPException
+
 from app.modules.authentication.models import LoginInput, LoginOutput
-from app.modules.authentication.config import LOGIN_API_URL
+from app.modules.authentication.config import LOGIN_API_URL, TOKEN_EXPIRES_IN
+from app.utils.authentication import generate_token
 
 
 router = APIRouter()
@@ -21,8 +23,8 @@ async def login(
                 "Content-Type": "application/x-www-form-urlencoded",
             },
             data={
-                'username': credentials['username'], 
-                'password': credentials['password']
+                'username': credentials.username, 
+                'password': credentials.password
             },
             timeout=90
         )
@@ -45,7 +47,18 @@ async def login(
                 "login_api_result": result.json()
             }
         )
+    
+    token = generate_token(
+        data = {
+            'username': credentials.username,
+        },
+        expires_in=TOKEN_EXPIRES_IN
+    )
 
-    return LoginOutput(results=result.json())
+    return LoginOutput(
+        access_token=token,
+        token_type='Bearer',
+        token_expire_minutes=TOKEN_EXPIRES_IN,
+    )
 
 
