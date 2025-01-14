@@ -1,4 +1,4 @@
-# models_rj_sms
+# Models RJ SMS
 
 - A API to serve the models of NEDTec/SMS.
 
