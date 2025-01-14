@@ -11,7 +11,7 @@ from app.utils.authentication import generate_token
 router = APIRouter()
 
 
-@router.post("/login", tags=["authentication"])
+@router.post("/login")
 async def login(
     credentials: LoginInput
 ) -> LoginOutput:

@@ -11,7 +11,7 @@ from app.utils.authentication import decode_token
 router = APIRouter()
 
 
-@router.post("/allergy/standardize", tags=["Standardizer"])
+@router.post("/allergy/standardize")
 async def allergy_standardize(
     allergies_input: AllergyStandardizeInput,
     jwt_payload: Annotated[str, Depends(decode_token)],
