@@ -40,7 +40,9 @@ def verify_results_using_medlm(
     gemini_result: list
 ):
     clean_mapping = []
-    for i, o in gemini_result.items():
+    for result in gemini_result:
+        i = result["input"]
+        o = result["output"]
         if i == o:
             clean_mapping.append(
                 {"input": i, "output": o, "output_medlm": {"flag": 1, "motivo": "Mesmo elemento"}}
