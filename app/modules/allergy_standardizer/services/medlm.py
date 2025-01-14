@@ -6,17 +6,18 @@ import requests
 import pandas as pd
 from loguru import logger
 
-from vertexai.language_models import TextGenerationModel
+from app.utils.googlecloud import get_access_token
+from app.config import SMS_PROJECT_ID
 
 
-def predict(command: str, token: str):
+def predict(command: str):
     result = requests.post(
-        url="https://us-central1-aiplatform.googleapis.com/v1/projects/rj-sms-dev/locations/us-central1/publishers/google/models/medlm-large:predict",
+        url=f"https://us-central1-aiplatform.googleapis.com/v1/projects/{SMS_PROJECT_ID}/locations/us-central1/publishers/google/models/medlm-large:predict",
         headers={
-            "Authorization": f"Beared {token}",
+            "Authorization": f"Bearer {get_access_token()}",
             "Content-Type": "application/json; charset=utf-8"
         },
-        data={
+        data=json.dumps({
             "instances": [
                 {
                     "content": command
@@ -28,7 +29,7 @@ def predict(command: str, token: str):
                 "topK": 40,
                 "topP": 0.95
             }
-        }
+        })
     )
     result.raise_for_status()
 
@@ -38,9 +39,6 @@ def predict(command: str, token: str):
 def verify_results_using_medlm(
     gemini_result: list
 ):
-    model_instance = TextGenerationModel.from_pretrained(
-        "medlm-large"
-    )
     clean_mapping = []
     for i, o in gemini_result.items():
         if i == o:
@@ -48,7 +46,7 @@ def verify_results_using_medlm(
                 {"input": i, "output": o, "output_medlm": {"flag": 1, "motivo": "Mesmo elemento"}}
             )
         elif o != "":
-            response = model_instance.predict(
+            response = predict(
                 f"""
             Você receberá duas entradas que devem se tratar de causadores de alergia, ou seja, medicamento, classe de medicamentos, substâncias ou alimentos.
             Avalie se o input {i}, que possivelmente está escrito de forma errada, e o output {o} se referem ao mesmo causador de alergia.
@@ -63,7 +61,7 @@ def verify_results_using_medlm(
 
             clean_mapping.append({"input": i, "output": o, "output_medlm": response})
         elif o == "":
-            response = model_instance.predict(
+            response = predict(
                 f"""
             Você receberá um input que possivelmente está escrito de forma errada.
             Avalie se o input {i} se refere a um causador de alergia. Pode ser um alimento, medicamento ou substância.
