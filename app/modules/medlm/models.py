@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import Optional, Literal
+from typing import Optional, Literal, List
+from pydantic import BaseModel, Field
 
 
 class MedLMParameters(BaseModel):
@@ -16,5 +16,30 @@ class MedLMInput(BaseModel):
     instances: list[MedLMInstance]
     parameters: Optional[MedLMParameters]
 
+class SafetyAttributes(BaseModel):
+    categories: List[str]
+    blocked: bool
+    scores: List[float]
+
+class CitationMetadata(BaseModel):
+    citations: List[str] = Field(default_factory=list)
+
+class Prediction(BaseModel):
+    safetyAttributes: SafetyAttributes
+    content: str
+    citationMetadata: CitationMetadata
+
+class TokenCount(BaseModel):
+    totalBillableCharacters: int
+    totalTokens: int
+
+class TokenMetadata(BaseModel):
+    outputTokenCount: TokenCount
+    inputTokenCount: TokenCount
+
+class Metadata(BaseModel):
+    tokenMetadata: TokenMetadata
+
 class MedLMOutput(BaseModel):
-    results: dict
+    predictions: List[Prediction]
+    metadata: Metadata
