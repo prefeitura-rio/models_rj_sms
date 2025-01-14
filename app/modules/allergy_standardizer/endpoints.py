@@ -34,4 +34,4 @@ async def allergy_standardize(
     # ------------------------------
     # Return the results
     # ------------------------------
-    return AllergyStandardizeOutput(results=verified_results)
+    return AllergyStandardizeOutput(corrections=verified_results)
