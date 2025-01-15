@@ -1,10 +1,10 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/models-rj-sms:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/models-rj-sms-api:$COMMIT_SHA', '.']
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/models-rj-sms:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/models-rj-sms-api:$COMMIT_SHA']
   # Kustomize: set the image in the kustomization.yaml file
   - name: 'gcr.io/cloud-builders/gke-deploy'
     dir: 'k8s/prod'
@@ -13,7 +13,7 @@ steps:
       - 'edit'
       - 'set'
       - 'image'
-      - 'gcr.io/project-id/models-rj-sms=gcr.io/$PROJECT_ID/models-rj-sms:$COMMIT_SHA'
+      - 'gcr.io/project-id/models-rj-sms-api=gcr.io/$PROJECT_ID/models-rj-sms-api:$COMMIT_SHA'
   # Kustomize: apply the kustomization.yaml file
   - name: 'gcr.io/cloud-builders/gke-deploy'
     dir: 'k8s/prod'
@@ -26,8 +26,8 @@ steps:
       - 'run'
       - '--filename=prod.yaml'
       - '--location=us-central1'
-      - '--cluster=datario'
-      - '--project=datario'
+      - '--cluster=datalake'
+      - '--project=rj-sms'
 
 images:
-  - 'gcr.io/$PROJECT_ID/models-rj-sms:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/models-rj-sms-api:$COMMIT_SHA'
