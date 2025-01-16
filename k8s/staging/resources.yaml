@@ -35,7 +35,7 @@ spec:
               memory: 4Gi
           livenessProbe:
             httpGet:
-              path: /healthz
+              path: /api/healthz
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 60
@@ -44,7 +44,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /api/healthz
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 60
