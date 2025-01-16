@@ -23,6 +23,10 @@ spec:
       containers:
         - name: api
           image: gcr.io/project-id/models-rj-sms-api
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
           envFrom:
             - secretRef:
                 name: api-prod-secrets
@@ -64,9 +68,9 @@ metadata:
   namespace: models
 spec:
   ports:
-    - name: "80"
-      port: 80
-      targetPort: 80
+    - name: http
+      port: 8080
+      targetPort: 8080
   selector:
     app: api-prod
 
@@ -98,4 +102,4 @@ spec:
               service:
                 name: api-prod
                 port:
-                  number: 80
+                  number: 8080
