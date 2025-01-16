@@ -31,23 +31,22 @@ spec:
               cpu: 500m
               memory: 2Gi
             limits:
-              cpu: 500m
-              memory: 2Gi
-          command: ["/bin/bash", "/compose-entrypoint.sh"]
+              cpu: 1000m
+              memory: 4Gi
           livenessProbe:
             httpGet:
-              path: /misc/health
-              port: 80
-            initialDelaySeconds: 5
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /misc/health
-              port: 80
-            initialDelaySeconds: 5
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 5
             successThreshold: 1

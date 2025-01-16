@@ -9,3 +9,7 @@ router = APIRouter()
 router.include_router(auth_endpoints.router, tags=["Authentication"], prefix="/v1")
 router.include_router(medlm_endpoints.router, tags=["Core"], prefix="/v1")
 router.include_router(allergy_endpoints.router, tags=["Use Cases"], prefix="/v1")
+
+@router.get("/healthz")
+async def api_health():
+    return "pong"
