@@ -22,7 +22,7 @@ async def allergy_standardize(
     # Standardize allergies using Gemini
     # ------------------------------
     gemini_result = await standardize_allergies_using_gemini(
-        allergies_list=allergies_input.allergies_list[:30]
+        allergies_list=allergies_input.allergies_list
     )
 
     # ------------------------------
