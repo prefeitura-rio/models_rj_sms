@@ -17,17 +17,18 @@ async def allergy_standardize(
     jwt_payload: Annotated[str, Depends(decode_token)],
 ) -> AllergyStandardizeOutput:
     
+    
     # ------------------------------
     # Standardize allergies using Gemini
     # ------------------------------
-    gemini_result = standardize_allergies_using_gemini(
-        allergies_list=allergies_input.allergies_list
+    gemini_result = await standardize_allergies_using_gemini(
+        allergies_list=allergies_input.allergies_list[:30]
     )
 
     # ------------------------------
     # Verify results using MedLM
     # ------------------------------
-    verified_results = verify_results_using_medlm(
+    verified_results = await verify_results_using_medlm(
         gemini_result=gemini_result
     )
 

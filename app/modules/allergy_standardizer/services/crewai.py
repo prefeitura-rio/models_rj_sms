@@ -10,7 +10,7 @@ from app.modules.allergy_standardizer.config import (
 )
 
 
-def standardize_allergies_using_gemini(
+async def standardize_allergies_using_gemini(
     allergies_list: list,
 ):
     ### Defining gemini crew
@@ -30,7 +30,7 @@ def standardize_allergies_using_gemini(
         "as alergias inputadas descartando elementos que não se referirem a alergias."
         "Sempre que você nao estiver certo que um elemento se refere a uma alergia se pergunte se "
         "o elemento pode gerar uma alergia em uma pessoa, sabendo que as alergias podem se tratar de medicamentos, alimentos ou substâncias.",
-        verbose=True,
+        verbose=False,
     )
 
     limpeza = Task(
@@ -48,17 +48,29 @@ def standardize_allergies_using_gemini(
         expected_output='Lista limpa cujos elementos são as alergias com grafia correta e que correspondem aos da lista input. No formato [{{"input":"alergia 1","output":"alergia limpa 1","motivo":"motivo do preenchimento do output"}},{{"input":"alergia 2","output":"alergia limpa 2","motivo":"motivo do preenchimento do output sem vírgulas"}}]',
         agent=buscador,
     )
-    crew = Crew(agents=[buscador], tasks=[limpeza], verbose=True, memory=False)
+    crew = Crew(
+        agents=[buscador],
+        tasks=[limpeza],
+        verbose=False,
+        memory=False
+    )
     
-    ### Executing gemini standardization
     result_list = []
     for i in range(0, len(allergies_list), BATCH_SIZE):
-        aux_list = allergies_list[i : i + BATCH_SIZE]
-        inputs_array = {"alergias": str(aux_list)}
-        result = crew.kickoff(inputs=inputs_array)
-        resultado = result.raw.replace("'", '"')
-        resultado = resultado.replace("None", '""')
-        resultado = resultado.replace("\n", "")
-        result_list.extend(json.loads(resultado))
+        print(f"Batch {i} of {len(allergies_list)}")
+        batch = allergies_list[i : i + BATCH_SIZE]
+
+        result = await crew.kickoff_async(inputs={"alergias": str(batch)})
+
+        try:
+            resultado = result.raw
+            resultado = resultado.replace("None", "null")
+            resultado = resultado.replace("\n", "")
+
+            resultado = json.loads(resultado)
+        except:
+            resultado = len(batch) * [None]
+        
+        result_list.extend(resultado)
 
     return result_list
