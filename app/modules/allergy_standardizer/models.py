@@ -12,3 +12,16 @@ class Correction(BaseModel):
 
 class AllergyStandardizeOutput(BaseModel):
     corrections: list[Correction]
+
+
+# ----------------
+# Models CrewAI
+# ----------------
+class Item(BaseModel):
+    input: str
+    output: str
+    motivo: str
+
+class DataList(BaseModel):
+    correcoes: list[Item]
+
