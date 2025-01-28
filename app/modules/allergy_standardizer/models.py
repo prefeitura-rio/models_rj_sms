@@ -20,7 +20,6 @@ class AllergyStandardizeOutput(BaseModel):
 class Item(BaseModel):
     input: str
     output: str
-    motivo: str
 
 class DataList(BaseModel):
     correcoes: list[Item]
