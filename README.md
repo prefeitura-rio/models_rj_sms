@@ -1,6 +1,6 @@
 # Models RJ SMS
 
-- A API to serve the models of NEDTec/SMS.
+- API to serve the models of NEDTec/SMS.
 
 ## Run the project
 

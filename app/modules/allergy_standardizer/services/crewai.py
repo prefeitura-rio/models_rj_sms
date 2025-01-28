@@ -4,6 +4,7 @@ import json
 from loguru import logger
 from crewai import Agent, Crew, Task, LLM
 
+from app.modules.allergy_standardizer.models import DataList
 from app.modules.allergy_standardizer.config import (
     GEMINI_API_KEY,
     BATCH_SIZE
@@ -45,13 +46,16 @@ async def standardize_allergies_using_gemini(
             " \n"
             "3. Retorne a lista de alergias \n"
         ),
-        expected_output='Lista limpa cujos elementos são as alergias com grafia correta e que correspondem aos da lista input. No formato [{{"input":"alergia 1","output":"alergia limpa 1","motivo":"motivo do preenchimento do output"}},{{"input":"alergia 2","output":"alergia limpa 2","motivo":"motivo do preenchimento do output sem vírgulas"}}]',
+        expected_output=
+            'Lista limpa cujos elementos são as alergias com grafia correta e que correspondem aos da lista input.'
+            'Objeto JSON no formato {{"correcoes":[{{"input":"alergia 1","output":"alergia limpa 1","motivo":"motivo do preenchimento do output"}},{{"input":"alergia 2","output":"alergia limpa 2","motivo":"motivo do preenchimento do output sem vírgulas"}}]}}',
         agent=buscador,
+        output_json=DataList
     )
     crew = Crew(
         agents=[buscador],
         tasks=[limpeza],
-        verbose=False,
+        verbose=True,
         memory=False
     )
     
@@ -63,11 +67,7 @@ async def standardize_allergies_using_gemini(
         result = await crew.kickoff_async(inputs={"alergias": str(batch)})
 
         try:
-            resultado = result.raw
-            resultado = resultado.replace("None", "null")
-            resultado = resultado.replace("\n", "")
-
-            resultado = json.loads(resultado)
+            resultado = result.json_dict['correcoes']
         except:
             resultado = len(batch) * [None]
         
