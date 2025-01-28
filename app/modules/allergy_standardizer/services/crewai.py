@@ -46,7 +46,9 @@ async def standardize_allergies_using_gemini(
             " \n"
             "3. Retorne a lista de alergias \n"
         ),
-        expected_output='Lista limpa cujos elementos são as alergias com grafia correta e que correspondem aos da lista input. Objeto JSON no formato {{"correcoes":{{"input":"alergia 1","output":"alergia limpa 1","motivo":"motivo do preenchimento do output"}},{{"input":"alergia 2","output":"alergia limpa 2","motivo":"motivo do preenchimento do output sem vírgulas"}}}}',
+        expected_output=
+            'Lista limpa cujos elementos são as alergias com grafia correta e que correspondem aos da lista input.'
+            'Objeto JSON no formato {{"correcoes":[{{"input":"alergia 1","output":"alergia limpa 1","motivo":"motivo do preenchimento do output"}},{{"input":"alergia 2","output":"alergia limpa 2","motivo":"motivo do preenchimento do output sem vírgulas"}}]}}',
         agent=buscador,
         output_json=DataList
     )
