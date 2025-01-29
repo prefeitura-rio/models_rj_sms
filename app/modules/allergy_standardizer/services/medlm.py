@@ -98,8 +98,8 @@ async def verify_results_using_medlm(
             Avalie se o input {verification["input"]}, que possivelmente está escrito de forma errada, e o output {verification["output"]} se referem ao mesmo causador de alergia.
             Caso um seja uma generalização do outro considere que são a mesma coisa.
             Ex: AINES e Cetoprofeno
-            Retorne flag 1 caso verdadeiro e 0 caso falso. A saída deverá ter a explicação da resposta em um JSON válido no formato:
-            {{"flag": Flag associada, "motivo": Explicação sucinta e sem vírgulas do valor associado a flag}}"""
+            Retorne flag 1 caso verdadeiro e 0 caso falso. A saída deverá ter um JSON válido no formato:
+            {{"flag": Flag associada}}"""
         )
 
     # Case: EMPTY_OUTPUT
@@ -109,8 +109,8 @@ async def verify_results_using_medlm(
             Você receberá um input que possivelmente está escrito de forma errada.
             Avalie se o input {verification["input"]} se refere a um causador de alergia. Pode ser um alimento, medicamento ou substância.
             Ex: 'AINES', 'Alergia a Cetoprofeno'
-            Retorne flag 0 caso verdadeiro e 1 caso falso. A saída deverá ter a explicação da resposta em um JSON válido no formato:
-            {{"flag": Flag associada, "motivo": Explicação sucinta e sem vírgulas do valor associado a flag}}"""
+            Retorne flag 0 caso verdadeiro e 1 caso falso. A saída deverá ter um JSON válido no formato:
+            {{"flag": Flag associada}}"""
         )
 
     # ----------------------------
@@ -133,8 +133,7 @@ async def verify_results_using_medlm(
     # Case: EQUALITY
     for verification in verifications["equality"]:
         verification["output_medlm"] = {
-            "flag": 1,
-            "motivo": "Mesmo elemento"
+            "flag": 1
         }
     
     # Case: EMPTY_OUTPUT
