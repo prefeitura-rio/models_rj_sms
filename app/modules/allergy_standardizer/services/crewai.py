@@ -16,7 +16,7 @@ async def standardize_allergies_using_gemini(
 ):
     ### Defining gemini crew
     llm = LLM(
-        model="gemini/gemini-pro",
+        model="gemini/gemini-1.5-pro-latest",
         temperature=0.9,
         api_key=GEMINI_API_KEY,
     )
